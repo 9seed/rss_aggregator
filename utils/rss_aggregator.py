@@ -10,8 +10,7 @@ class RssAggregatorService:
 
     def __init__(self, init=True):
         self.init = init
-        # self.init_opml_file = f'/rss_aggregator_service/src/RAW.opml'
-        self.init_opml_file = f'/Users/liyongji/LYJ/MyProject/rss_aggregator/src/RAW.opml'
+        self.init_opml_file = f'/rss_aggregator_service/src/RAW.opml'
         self.outline = opml.parse(self.init_opml_file)
         self.url = 'http://0.0.0.0:8000/api/v1/rss/news/'
 
