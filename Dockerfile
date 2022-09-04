@@ -8,7 +8,6 @@ ADD . /rss_aggregator_service
 WORKDIR /rss_aggregator_service
 
 RUN pip3 install -r requirements.txt
-RUN pip3 install psycopg2-binary
 
 CMD ["/bin/bash"]
 ENTRYPOINT [ "python3", "-u", "main.py"]
