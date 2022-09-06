@@ -3,3 +3,5 @@ feedparser==6.0.10
 schedule==1.1.0
 toml==0.10.2
 requests==2.28.1
+mysqlclient==2.1.1
+DBUtils==1.2

@@ -7,6 +7,7 @@ ADD . /rss_aggregator_service
 
 WORKDIR /rss_aggregator_service
 
+RUN apt update && apt install -y build-essential default-libmysqlclient-dev
 RUN pip3 install -r requirements.txt
 
 CMD ["/bin/bash"]

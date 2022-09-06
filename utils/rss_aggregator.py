@@ -1,10 +1,12 @@
 import os
 import json
+import time
+
 import opml
 import feedparser
 import requests
 import threading
-import sqlite3
+from utils.init_mysqldb import MysqlCli
 
 
 class RssAggregatorService:
@@ -12,25 +14,7 @@ class RssAggregatorService:
     def __init__(self):
         self.init_opml_file = f'/rss_aggregator_service/src/RAW.opml'
         self.outline = opml.parse(self.init_opml_file)
-        self.conn = sqlite3.connect('/rss_aggregator_service/db/test.db')
-        self.c = self.conn.cursor()
-        self.init_table()
-
-    def init_table(self):
-        SQL = '''
-        CREATE TABLE if not exists RSS 
-        (
-        ID TEXT PRIMARY KEY NOT NULL,
-        TITLE CHAR(200) NOT NULL,
-        LINK CHAR(200) NOT NULL,
-        AUTHOR CHAR(50),
-        UPDATED CHAR(50),
-        SUMMARY TEXT,
-        CONTENT TEXT
-        );
-        '''
-        self.c.execute(SQL)
-        self.conn.commit()
+        self.mysql_cli = MysqlCli()
 
     def update_rss_content(self):
         for i in range(len(self.outline)):
@@ -52,13 +36,17 @@ class RssAggregatorService:
                                 content = data['entries'][k].get('content', '')[0].value.replace("'", '')
                             except:
                                 content = data['entries'][k].get('content', '').replace("'", '')
-                            SQL = f'''
-                            INSERT OR IGNORE INTO RSS
-                            (ID, TITLE, LINK, AUTHOR, UPDATED, SUMMARY, CONTENT) 
-                            VALUES ('{_id}', '{title}', '{link}', '{author}', '{updated}', '{summary}', '{content}')
-                            '''
-                            self.c.execute(SQL)
-                            self.conn.commit()
+                            data = {
+                                '_id': _id,
+                                'title': title,
+                                'link': link,
+                                'author': author,
+                                'updated': updated,
+                                'summary': summary,
+                                'content': content,
+                                'ts': int(time.time())
+                            }
+                            self.mysql_cli.upsert(data)
                 except Exception as e:
                     print(e)
                     continue
