@@ -13,7 +13,8 @@ class MysqlCli:
                                 user=DB_SETTINGS['user'],
                                 passwd=DB_SETTINGS['password'],
                                 db=DB_SETTINGS['db'],
-                                port=DB_SETTINGS['port'])
+                                port=DB_SETTINGS['port'],
+                                charset='utf8mb4')
 
     @contextlib.contextmanager
     def get_connection(self):

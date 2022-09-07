@@ -4,8 +4,10 @@ import time
 
 import opml
 import feedparser
+
 import requests
 import threading
+from pymysql.converters import escape_string
 from utils.init_mysqldb import MysqlCli
 
 
@@ -27,16 +29,16 @@ class RssAggregatorService:
                         for k in range(len(data['entries'])):
                             print(data['entries'][k].title)
                             print(time.time())
-                            title = data['entries'][k].get('title', '').replace("'", '')
-                            _id = data['entries'][k].get('id', '').replace("'", '')
-                            link = data['entries'][k].get('link', '').replace("'", '')
-                            author = data['entries'][k].get('author', '').replace("'", '')
-                            updated = data['entries'][k].get('updated', '').replace("'", '')
-                            summary = data['entries'][k].get('summary', '').replace("'", '')
+                            title = escape_string(data['entries'][k].get('title', '-'))
+                            _id = escape_string(data['entries'][k].get('id', '-'))
+                            link = escape_string(data['entries'][k].get('link', '-'))
+                            author = escape_string(data['entries'][k].get('author', '-'))
+                            updated = escape_string(data['entries'][k].get('updated', '-'))
+                            summary = escape_string(data['entries'][k].get('summary', '-'))
                             try:
-                                content = data['entries'][k].get('content', '')[0].value.replace("'", '')
+                                content = escape_string(data['entries'][k].get('content', '-')[0].value)
                             except:
-                                content = data['entries'][k].get('content', '').replace("'", '')
+                                content = escape_string(data['entries'][k].get('content', '-'))
                             data = {
                                 '_id': _id,
                                 'title': title,
