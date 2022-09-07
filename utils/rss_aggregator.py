@@ -26,6 +26,7 @@ class RssAggregatorService:
                     if data['entries']:
                         for k in range(len(data['entries'])):
                             print(data['entries'][k].title)
+                            print(time.time())
                             title = data['entries'][k].get('title', '').replace("'", '')
                             _id = data['entries'][k].get('id', '').replace("'", '')
                             link = data['entries'][k].get('link', '').replace("'", '')
